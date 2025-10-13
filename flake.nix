@@ -29,6 +29,10 @@
           pkgs.tmux
           pkgs.yaak
           pkgs.localsend
+          pkgs.eas-cli
+          pkgs.starship
+          pkgs.zoxide
+          pkgs.devenv
       ];
 
       nix.settings.experimental-features = "nix-command flakes";
@@ -49,8 +53,13 @@
       homebrew = {
         enable = true;
 
+        taps = [
+          "tw93/tap"
+        ];
+
         brews = [
           "mas"
+          "mole"
         ];
         
         casks = [
