@@ -33,6 +33,9 @@
           pkgs.starship
           pkgs.zoxide
           pkgs.devenv
+          pkgs.direnv
+          pkgs.cocoapods
+          pkgs.pnpm
       ];
 
       nix.settings.experimental-features = "nix-command flakes";
@@ -75,6 +78,7 @@
           "spotify"
           "zen"
           "claude"
+          "android-studio"
         ];
 
         masApps = {
