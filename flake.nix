@@ -36,6 +36,9 @@
           pkgs.direnv
           pkgs.cocoapods
           pkgs.pnpm
+          pkgs.opam
+          pkgs.watchman
+          pkgs.zulu17
       ];
 
       nix.settings.experimental-features = "nix-command flakes";
