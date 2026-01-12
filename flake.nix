@@ -25,11 +25,9 @@
           pkgs.nodejs_24
           pkgs.ruby
           pkgs.git
-          pkgs.claude-code
           pkgs.tmux
           pkgs.yaak
           pkgs.localsend
-          pkgs.eas-cli
           pkgs.starship
           pkgs.zoxide
           pkgs.devenv
@@ -39,6 +37,8 @@
           pkgs.opam
           pkgs.watchman
           pkgs.zulu17
+          pkgs.ffmpeg_7
+          pkgs.yarn-berry
       ];
 
       nix.settings.experimental-features = "nix-command flakes";
@@ -66,6 +66,7 @@
         brews = [
           "mas"
           "mole"
+          "yt-dlp"
         ];
         
         casks = [
@@ -73,7 +74,6 @@
           "mos"
           "bluesnooze"
           "expo-orbit"
-          "cursor"
           "raycast"
           "1password"
           "ghostty"
@@ -82,6 +82,11 @@
           "zen"
           "claude"
           "android-studio"
+          "visual-studio-code"
+          "slack"
+          "google-chrome"
+          "telegram"
+          "claude-code"
         ];
 
         masApps = {
@@ -89,6 +94,7 @@
         };
 
         onActivation.autoUpdate = true;
+        onActivation.cleanup = "zap";
       };
 
       system = {
@@ -98,6 +104,11 @@
 
             KeyRepeat = 2; 
             InitialKeyRepeat = 15;
+            #"com.apple.mouse.tapBehavior" = 1;
+          };
+
+          dock = {
+            tilesize = 48;
           };
         };
       };
