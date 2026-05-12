@@ -157,6 +157,7 @@
           "gh"
           "atlassian/homebrew-acli/acli"
           "jj"
+          "dmmulroy/tap/jj-starship"
         ];
         
         casks = [
@@ -181,8 +182,7 @@
           "localsend"
           "figma"
           "cmux"
-          "codex-app"
-          "macwhisper"
+          "orbstack"
         ];
 
         masApps = {};
