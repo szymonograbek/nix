@@ -32,6 +32,10 @@
     primaryUser = "szymonograbek";
 
     configuration = { pkgs, ... }: {
+      imports = [
+        (import ./amphetamine.nix { inherit primaryUser; })
+      ];
+
       nixpkgs.config.allowUnfree = true;
 
       # List packages installed in system profile. To search by name, run:
@@ -63,6 +67,13 @@
           pkgs.google-cloud-sdk
           pkgs.uv
       ];
+
+      system.activationScripts.extraActivation.text = ''
+        if [ -x /opt/homebrew/bin/brew ]; then
+          echo "updating Homebrew..."
+          /usr/bin/sudo -u ${primaryUser} -H /opt/homebrew/bin/brew update
+        fi
+      '';
 
       system.activationScripts.postActivation.text = ''
         echo "installing PyPI CLI tools via uv..."
@@ -145,7 +156,6 @@
 
         taps = [
           "tw93/tap"
-          "atlassian/homebrew-acli"
         ];
 
         brews = [
@@ -155,9 +165,11 @@
           "watchman"
           "yt-dlp"
           "gh"
-          "atlassian/homebrew-acli/acli"
           "jj"
           "dmmulroy/tap/jj-starship"
+          "imagemagick"
+          "herdr"
+          "cloudflared"
         ];
         
         casks = [
@@ -183,11 +195,13 @@
           "figma"
           "cmux"
           "orbstack"
+          "ticktick"
+          "codex"
+          "codex-app"
         ];
 
-        masApps = {};
-
-        onActivation.autoUpdate = true;
+        # Homebrew is updated explicitly before bundle activation above.
+        onActivation.autoUpdate = false;
         onActivation.cleanup = "zap";
         onActivation.upgrade = true;
       };
