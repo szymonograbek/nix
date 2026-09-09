@@ -3,18 +3,19 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-ruby.url = "github:bobvanderlinden/nixpkgs-ruby";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     brew-src = {
-      url = "github:Homebrew/brew/5.1.10";
+      url = "github:Homebrew/brew/6.0.15";
       flake = false;
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, brew-src }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nixpkgs-ruby, nix-homebrew, brew-src }:
   let
     # PyPI CLI tools installed via `uv tool install` on activation.
     # Add a package name to the list and run `darwin-rebuild switch`.
@@ -27,6 +28,8 @@
       "eas-cli"
       "@earendil-works/pi-coding-agent"
       "mcporter"
+      "agent-device"
+      "stim-cli"
     ];
 
     primaryUser = "szymonograbek";
@@ -47,7 +50,7 @@
           pkgs.bun
           pkgs.fish
           pkgs.nodejs_24
-          pkgs.ruby
+          nixpkgs-ruby.packages.${pkgs.stdenv.hostPlatform.system}."ruby-3.3.0"
           pkgs.git
           pkgs.tmux
           pkgs.yaak
@@ -155,11 +158,15 @@
         enable = true;
 
         taps = [
+          "facebook/fb"
           "tw93/tap"
         ];
 
         brews = [
+          "ccache"
+          "facebook/fb/idb-companion"
           "mas"
+          "go"
           "direnv"
           "mole"
           "watchman"
@@ -238,8 +245,8 @@
             user = primaryUser;
             autoMigrate = true;
             package = brew-src // {
-              name = "brew-5.1.10";
-              version = "5.1.10";
+              name = "brew-6.0.15";
+              version = "6.0.15";
             };
           };
         }

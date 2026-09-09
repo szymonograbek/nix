@@ -41,7 +41,14 @@ let
   '';
 in
 {
-  homebrew.masApps.Amphetamine = 937984704;
+  homebrew.masApps = {
+    Amphetamine = 937984704;
+    Jomo = 1609960918;
+    Kindle = 302584613;
+    RocketSim = 1504940162;
+    Transporter = 1450874784;
+    Xcode = 497799835;
+  };
 
   system.activationScripts.postActivation.text = ''
     echo "configuring Amphetamine..."
