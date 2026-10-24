@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Appends Homebrew packages to the homebrew lists in flake.nix.
+# Usage: ./add-brew brew install [--cask|--formula] <name>...
+#        ./add-brew brew tap <user/repo>
+# Tapped names (user/repo/name) also add user/repo to taps.
+set -euo pipefail
+
+flake="$(cd "$(dirname "$0")" && pwd)/flake.nix"
+
+# Appends "item" before the closing bracket of `list = [ ... ];`, unless already listed.
+append() {
+  local list=$1 item=$2 tmp
+  tmp=$(mktemp "$flake.XXXXXX")
+  if awk -v list="$list" -v item="$item" '
+    $0 ~ "^[[:space:]]*" list " = \\[" { inlist = 1 }
+    inlist { line = $0; gsub(/[[:space:]]/, "", line); if (line == "\"" item "\"") found = 1 }
+    inlist && /^[[:space:]]*"/ { match($0, /^[[:space:]]*/); indent = substr($0, 1, RLENGTH) }
+    inlist && /^[[:space:]]*\];/ { if (!found) print indent "\"" item "\""; inlist = 0 }
+    { print }
+    END { exit found }
+  ' "$flake" >"$tmp"; then
+    mv "$tmp" "$flake"
+    echo "Added $item to $list"
+  else
+    rm "$tmp"
+    echo "$item already in $list"
+  fi
+}
+
+add_tap_of() {
+  local name=$1
+  if [[ $name == */*/* ]]; then
+    append taps "${name%/*}"
+  fi
+}
+
+[[ ${1:-} == brew ]] && shift
+
+case ${1:-} in
+  install)
+    shift
+    list=brews
+    names=()
+    for arg in "$@"; do
+      case $arg in
+        --cask | --casks) list=casks ;;
+        --formula | --formulae) list=brews ;;
+        -*) ;;
+        *) names+=("$arg") ;;
+      esac
+    done
+    [[ ${#names[@]} -gt 0 ]] || { echo "No package names given" >&2; exit 1; }
+    for name in "${names[@]}"; do
+      add_tap_of "$name"
+      append "$list" "$name"
+    done
+    ;;
+  tap)
+    [[ -n ${2:-} ]] || { echo "No tap given" >&2; exit 1; }
+    append taps "$2"
+    ;;
+  *)
+    echo "Usage: $0 brew install [--cask|--formula] <name>... | brew tap <user/repo>" >&2
+    exit 1
+    ;;
+esac

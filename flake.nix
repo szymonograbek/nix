@@ -30,15 +30,15 @@
       "mcporter"
       "agent-device"
       "stim-cli"
+      "cf"
+      "@anthropic-ai/claude-code"
+      "effect-solutions"
+      "skills"
     ];
 
     primaryUser = "szymonograbek";
 
     configuration = { pkgs, ... }: {
-      imports = [
-        (import ./amphetamine.nix { inherit primaryUser; })
-      ];
-
       nixpkgs.config.allowUnfree = true;
 
       # List packages installed in system profile. To search by name, run:
@@ -177,6 +177,7 @@
           "imagemagick"
           "herdr"
           "cloudflared"
+          "xcodegen"
         ];
         
         casks = [
@@ -191,13 +192,11 @@
           "tailscale-app"
           "spotify"
           "zen"
-          "claude"
           "android-studio"
           "visual-studio-code"
           "slack"
           "google-chrome"
           "telegram"
-          "claude-code@latest"
           "localsend"
           "figma"
           "cmux"
@@ -205,6 +204,8 @@
           "ticktick"
           "codex"
           "codex-app"
+          "1password-cli"
+          "szymonograbek/tap/bee"
         ];
 
         # Homebrew is updated explicitly before bundle activation above.
